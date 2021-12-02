@@ -1,23 +1,27 @@
-const express = require('express');
+const express = require("express");
 
-const cookieParser = require('cookie-parser');
+const cookieParser = require("cookie-parser");
 
-const dotenv = require('dotenv')
+const dotenv = require("dotenv");
 
 const app = express();
 
-app.use(express.json())
+const port = process.env.PORT || 8080;
+
+app.use(express.json());
 
 app.use(cookieParser());
 
-dotenv.config({path:'../config.env'})
+dotenv.config({ path: "../config.env" });
 
-app.use(require('../routers/auth'))
+app.use(require("../routers/auth"));
 
-require('../db/conn')
+require("../db/conn");
 
-const port = process.env.PORT || 8080;
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static("client/build"));
+}
 
-app.listen(port,()=>{
-    console.log(`server is running on port number ${port}`);
-})
+app.listen(port, () => {
+  console.log(`server is running on port number ${port}`);
+});
